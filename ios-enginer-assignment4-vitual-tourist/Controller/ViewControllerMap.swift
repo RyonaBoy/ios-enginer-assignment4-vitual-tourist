@@ -32,7 +32,9 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     fileprivate func setupFetchedResultsControllerShit(){
         let fetchRequest:NSFetchRequest<Pin> = Pin.fetchRequest()
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "pins")
+        let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: "pins")
         fetchedResultsController.delegate = self
         do{//fetch all pins from previous sessions and show on map
             try fetchedResultsController.performFetch()
@@ -66,13 +68,16 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }else if gestureRecognizer.state != UIGestureRecognizer.State.began{
             let touchPoint = gestureRecognizer.location(in: self.map)
             let touchMapCoordinate = self.map.convert(touchPoint, toCoordinateFrom: map)
+            //put pin on map
             let annotation = MKPointAnnotation()
             annotation.subtitle = "You long pressed here"
             annotation.coordinate = touchMapCoordinate
             self.map.addAnnotation(annotation)
-            
-            let pin = Pin(context: dataController.viewContext)
-            try? dataController.viewContext.save()
+            //put pin on disc
+            let pin = Pin(context: dataController.persistentContainer.viewContext)
+            pin.latitude = Double(touchMapCoordinate.latitude)
+            pin.longitude = Double(touchMapCoordinate.longitude)
+            try? dataController.persistentContainer.viewContext.save()
         }
     }
 }

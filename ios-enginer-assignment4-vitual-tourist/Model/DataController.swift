@@ -10,7 +10,6 @@ import CoreData
 
 class DataController{
     let persistentContainer: NSPersistentContainer
-    var viewContext: NSManagedObjectContext{ return persistentContainer.viewContext }
     let backgroundContext: NSManagedObjectContext!    //some concurrency bullshit, no idea how to use
 
     init(modelName: String){
@@ -24,10 +23,25 @@ class DataController{
                 fatalError(error!.localizedDescription)
             }
             //no idea what these bullshits do, copy pasted from mooskine
-            self.viewContext.automaticallyMergesChangesFromParent = true
+            self.persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
             self.backgroundContext.automaticallyMergesChangesFromParent = true
             self.backgroundContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-            self.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
+            self.persistentContainer.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
+            self.autoSaveViewContext(interval: 5)
+        }
+    }
+    
+    func autoSaveViewContext(interval: TimeInterval = 30){
+        print("autosaving")
+        guard interval > 0 else{
+            print("cannot set negative autosave internal")
+            return
+        }
+        if persistentContainer.viewContext.hasChanges{
+            try? persistentContainer.viewContext.save()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + interval){
+            self.autoSaveViewContext(interval: interval)
         }
     }
 }
