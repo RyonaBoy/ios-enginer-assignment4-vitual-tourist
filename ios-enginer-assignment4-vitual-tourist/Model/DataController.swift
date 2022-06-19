@@ -11,9 +11,8 @@ import CoreData
 class DataController{
     let persistentContainer: NSPersistentContainer
     var viewContext: NSManagedObjectContext{ return persistentContainer.viewContext }
-    //some concurrency bullshit, no idea how to use
-    let backgroundContext: NSManagedObjectContext!
-    
+    let backgroundContext: NSManagedObjectContext!    //some concurrency bullshit, no idea how to use
+
     init(modelName: String){
         persistentContainer = NSPersistentContainer(name: modelName)
         backgroundContext = persistentContainer.newBackgroundContext()
