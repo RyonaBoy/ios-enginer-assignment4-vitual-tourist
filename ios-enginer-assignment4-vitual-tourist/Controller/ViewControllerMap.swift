@@ -53,8 +53,6 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
     }
     
-    
-    
     fileprivate func setupLongPressGestureShit(){
         let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPress))
         lpgr.minimumPressDuration = 1
@@ -83,8 +81,16 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("pin press")
-        
+        self.performSegue(withIdentifier: "showPhotos", sender: view)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if "showPhotos" == segue.identifier, let view = sender as? MKAnnotationView{
+            if let destinationViewController = segue.destination as? ViewControllerPhotos{
+                destinationViewController.latitude = view.annotation?.coordinate.latitude
+                destinationViewController.longitude = view.annotation?.coordinate.longitude
+            }
+        }
     }
 }
 

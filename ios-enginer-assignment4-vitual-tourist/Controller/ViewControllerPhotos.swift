@@ -7,11 +7,14 @@
 
 import UIKit
 
-class ViewControllerPhotos: UIViewController, UICollectionViewDelegate {
+class ViewControllerPhotos: UICollectionViewController {
 
+    var longitude: Double?
+    var latitude: Double?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        FlickrClient.searchPhotos(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0)
         // Do any additional setup after loading the view.
     }
     
