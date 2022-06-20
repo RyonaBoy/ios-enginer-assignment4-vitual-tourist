@@ -31,7 +31,7 @@ class DataController{
         }
     }
     
-    func autoSaveViewContext(interval: TimeInterval = 30){
+    func autoSaveViewContext(interval: TimeInterval = 30){//autosave stuffs
         print("autosaving")
         guard interval > 0 else{
             print("cannot set negative autosave internal")

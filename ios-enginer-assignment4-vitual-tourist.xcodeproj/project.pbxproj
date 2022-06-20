@@ -15,6 +15,7 @@
 		9A29C26D285F34B40006FBFD /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A29C26B285F34B40006FBFD /* DataController.swift */; };
 		9A29C26E285F34B40006FBFD /* ViewControllerMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A29C26C285F34B40006FBFD /* ViewControllerMap.swift */; };
 		9A29C273285F35310006FBFD /* assignment4.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9A29C271285F35310006FBFD /* assignment4.xcdatamodeld */; };
+		9A8E76F5286076DD001B0163 /* ViewControllerPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8E76F4286076DD001B0163 /* ViewControllerPhotos.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		9A29C26B285F34B40006FBFD /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		9A29C26C285F34B40006FBFD /* ViewControllerMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerMap.swift; sourceTree = "<group>"; };
 		9A29C272285F35310006FBFD /* assignment4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = assignment4.xcdatamodel; sourceTree = "<group>"; };
+		9A8E76F4286076DD001B0163 /* ViewControllerPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerPhotos.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				9A29C26C285F34B40006FBFD /* ViewControllerMap.swift */,
+				9A8E76F4286076DD001B0163 /* ViewControllerPhotos.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A29C24D285F32C80006FBFD /* AppDelegate.swift in Sources */,
+				9A8E76F5286076DD001B0163 /* ViewControllerPhotos.swift in Sources */,
 				9A29C26D285F34B40006FBFD /* DataController.swift in Sources */,
 				9A29C24F285F32C80006FBFD /* SceneDelegate.swift in Sources */,
 				9A29C273285F35310006FBFD /* assignment4.xcdatamodeld in Sources */,

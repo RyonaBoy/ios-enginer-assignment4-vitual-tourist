@@ -17,6 +17,7 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        map.delegate = self
         setupFetchedResultsControllerShit()
         setupLongPressGestureShit()
     }
@@ -79,6 +80,11 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
             pin.longitude = Double(touchMapCoordinate.longitude)
             try? dataController.persistentContainer.viewContext.save()
         }
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("pin press")
+        
     }
 }
 
