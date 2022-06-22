@@ -7,15 +7,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2DA485BC-E7D8-48CE-80DF-E641D1555961"
+            uuid = "6189140C-8724-4854-B1D9-EC6908167E2F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ios-enginer-assignment4-vitual-tourist/Model/FlickrClient.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
             landmarkName = "searchPhotos(latitude:longitude:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -23,7 +23,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E67FF9C0-F42F-43AC-8D3A-7D2B14728523"
+            uuid = "57E1F561-FB7E-444F-BE0C-CA75D493A277"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"

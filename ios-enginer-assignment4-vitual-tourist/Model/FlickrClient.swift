@@ -10,8 +10,8 @@ import Foundation
 class FlickrClient{
     
     struct Auth{
-        static var keyAPI = "a111b6e212d82b695000f68aa53b88fc"
-        static var keyAPISecret = "41f29ade89c03826"
+        static var keyAPI = "e18b1c5f268a1357f6a083cccf572d95"
+        static var keyAPISecret = "21334bb536ce7fc3"
     }
     
     enum Endpoints{
@@ -37,13 +37,14 @@ class FlickrClient{
         request.addValue("application/json", forHTTPHeaderField: "Accept")//no idea what these bullshit does, copy pasted from previous project
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")//no idea what these bullshit does, copy pasted from previous project
         request.httpBody = try! JSONEncoder().encode(body)
-        _ = URLSession.shared.dataTask(with: request){data, response, error in
+        let task = URLSession.shared.dataTask(with: request){data, response, error in
             guard let data = data else{
                 DispatchQueue.main.async {
                     completion(nil, error)
                 }
                 return
             }
+            print(data)
             do{
                 let responseObjectJSON = try JSONDecoder().decode(ResponseType.self, from: data)
                 DispatchQueue.main.async {
@@ -55,12 +56,14 @@ class FlickrClient{
                 }
             }
         }
+        task.resume()
     }
     
     class func searchPhotos(latitude: Double, longitude: Double){
         let jsonBullshit = RequestFlickr(api_key: Auth.keyAPI, lat: latitude, lon: longitude)
         taskForPOSTRequest(url: Endpoints.searchPhotos(latitude: "\(latitude)", longitude: "\(longitude)").url, responseType: ResponseFlickr.self, body: jsonBullshit){ response, error in
             print(response)
+            print(error)
         }
     }
     

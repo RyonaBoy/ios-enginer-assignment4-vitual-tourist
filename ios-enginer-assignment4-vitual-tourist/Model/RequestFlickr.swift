@@ -11,4 +11,10 @@ struct RequestFlickr: Codable {
     let api_key: String
     let lat: Double
     let lon: Double
+    
+    enum CodingKeys: String, CodingKey{
+        case api_key
+        case lat
+        case lon
+    }
 }

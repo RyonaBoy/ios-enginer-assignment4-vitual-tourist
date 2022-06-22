@@ -10,6 +10,11 @@ import Foundation
 struct ResponseFlickr: Codable {
     let photos: Photos
     let stat: String?
+    
+    enum CodingKeys: String, CodingKey{
+        case photos
+        case stat
+    }
 }
 
 struct Photos: Codable {
@@ -18,6 +23,14 @@ struct Photos: Codable {
     let perpage: Int
     let total: String
     let photo: [Images]
+    
+    enum CodingKeys: String, CodingKey{
+        case page
+        case pages
+        case perpage
+        case total
+        case photo
+    }
 }
 
 struct Images: Codable {
@@ -30,4 +43,16 @@ struct Images: Codable {
     let ispublic: Int
     let isfriend: Int
     let isfamily: Int
+    
+    enum CodingKeys: String, CodingKey{
+        case id
+        case owner
+        case secret
+        case server
+        case farm
+        case title
+        case ispublic
+        case isfriend
+        case isfamily
+    }
 }
