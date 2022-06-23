@@ -22,10 +22,6 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
         setupLongPressGestureShit()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         fetchedResultsController = nil
@@ -33,11 +29,10 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     fileprivate func setupFetchedResultsControllerShit(){
         let fetchRequest:NSFetchRequest<Pin> = Pin.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: false)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: false)]
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: "pins")
         fetchedResultsController.delegate = self
-        do{//fetch all pins from previous sessions and show on map
+        do{//fetch all core data pins and show on map
             try fetchedResultsController.performFetch()
             if let fetchedObjects = fetchedResultsController.fetchedObjects{
                 var annotations = [MKPointAnnotation]()
@@ -72,10 +67,12 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
             annotation.subtitle = "You long pressed here"
             annotation.coordinate = touchMapCoordinate
             self.map.addAnnotation(annotation)
-            //put pin on disc
-            let pin = Pin(context: dataController.persistentContainer.viewContext)
-            pin.latitude = Double(touchMapCoordinate.latitude)
-            pin.longitude = Double(touchMapCoordinate.longitude)
+            
+            //put pin to core data
+            let pinCoreData = Pin(context: dataController.persistentContainer.viewContext)
+            pinCoreData.latitude = Double(touchMapCoordinate.latitude)
+            pinCoreData.longitude = Double(touchMapCoordinate.longitude)
+            
             try? dataController.persistentContainer.viewContext.save()
         }
     }
@@ -87,6 +84,7 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if "showPhotos" == segue.identifier, let view = sender as? MKAnnotationView{
             if let destinationViewController = segue.destination as? ViewControllerPhotos{
+                destinationViewController.dataController = self.dataController
                 destinationViewController.latitude = view.annotation?.coordinate.latitude
                 destinationViewController.longitude = view.annotation?.coordinate.longitude
             }

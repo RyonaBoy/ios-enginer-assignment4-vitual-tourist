@@ -11,7 +11,7 @@ class FlickrClient{
     
     struct Auth{
         static var keyAPI = "e18b1c5f268a1357f6a083cccf572d95"
-        static var keyAPISecret = "21334bb536ce7fc3"
+        static var keyAPISecret = "21334bb536ce7fc3"//wtf is this needed for?
     }
     
     enum Endpoints{
@@ -22,7 +22,7 @@ class FlickrClient{
         var stringValue: String{
             switch self{
             case let .searchPhotos(latitude, longitude):
-                return Endpoints.base + "?method=flickr.photos.search&api_key=" + Auth.keyAPI + "&lat=" + latitude + "&lon=" + longitude + "&format=json&nojsoncallback=1"
+                return Endpoints.base + "?method=flickr.photos.search&api_key=" + Auth.keyAPI + "&lat=" + latitude + "&lon=" + longitude + "&per_page=20&page=1&format=json&nojsoncallback=1"
             }
         }
         
@@ -38,13 +38,14 @@ class FlickrClient{
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")//no idea what these bullshit does, copy pasted from previous project
         request.httpBody = try! JSONEncoder().encode(body)
         let task = URLSession.shared.dataTask(with: request){data, response, error in
+            print(url)
+            print(String(data: data!, encoding: .utf8))
             guard let data = data else{
                 DispatchQueue.main.async {
                     completion(nil, error)
                 }
                 return
             }
-            print(data)
             do{
                 let responseObjectJSON = try JSONDecoder().decode(ResponseType.self, from: data)
                 DispatchQueue.main.async {
@@ -57,14 +58,6 @@ class FlickrClient{
             }
         }
         task.resume()
-    }
-    
-    class func searchPhotos(latitude: Double, longitude: Double){
-        let jsonBullshit = RequestFlickr(api_key: Auth.keyAPI, lat: latitude, lon: longitude)
-        taskForPOSTRequest(url: Endpoints.searchPhotos(latitude: "\(latitude)", longitude: "\(longitude)").url, responseType: ResponseFlickr.self, body: jsonBullshit){ response, error in
-            print(response)
-            print(error)
-        }
     }
     
 }
