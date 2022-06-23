@@ -12,6 +12,7 @@ class ViewControllerPhotos: UIViewController, UICollectionViewDelegate, UICollec
 
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet weak var layout: UICollectionViewFlowLayout!
+    @IBOutlet weak var buttonNewCollection: UIButton!
     var pinCoreData: Pin!
     var longitude: Double?
     var latitude: Double?
@@ -37,6 +38,38 @@ class ViewControllerPhotos: UIViewController, UICollectionViewDelegate, UICollec
         fetchedResultsControllerPhotos = nil
     }
     
+    @IBAction func buttonNewCollectionPressed(_ sender: Any) {
+        if let fetchedObjects = fetchedResultsControllerPhotos.fetchedObjects{
+            print("fetched photos count \(fetchedObjects.count)")
+            for photo in fetchedObjects{
+                dataController.persistentContainer.viewContext.delete(photo)
+                do{
+                    try dataController.persistentContainer.viewContext.save()
+                }catch{
+                    print("Unable to delete picture")
+                }
+            }
+        }
+        
+        let requestBodyJson = RequestFlickr(api_key: FlickrClient.Auth.keyAPI, lat: latitude ?? 0.0, lon: longitude ?? 0.0)
+        FlickrClient.taskForPOSTRequest(url: FlickrClient.Endpoints.searchPhotos(latitude: "\(latitude ?? 0.0)", longitude: "\(longitude ?? 0.0)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
+            if let photos = responseObjectJSON?.photos.photo{
+//                for photo in photos{
+//                    let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
+//                    let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
+//                    print(photoURL)
+//                    if let data = try? Data(contentsOf: photoURL){
+//                        photoCoreData.image = data
+//                        photoCoreData.creationDate = Date()
+//                        photoCoreData.pin = self.pinCoreData
+//                    }
+//                }
+//                try? self.dataController.persistentContainer.viewContext.save()
+//                self.collectionView.reloadData()
+            }
+        }
+    }
+    
     fileprivate func setupFetchedResultsControllerPin(){//fetch core data pin for given latitude, longitude which needs to be associated with corresponding pictures after download
         let fetchRequestPin:NSFetchRequest<Pin> = Pin.fetchRequest()
         fetchRequestPin.predicate = NSPredicate(format: "latitude == %@ AND longitude == %@", NSNumber(value: latitude ?? 0.0), NSNumber(value: longitude ?? 0.0))
@@ -46,6 +79,7 @@ class ViewControllerPhotos: UIViewController, UICollectionViewDelegate, UICollec
         do{
             try fetchedResultsControllerPin.performFetch()
             if let fetchedObjects = fetchedResultsControllerPin.fetchedObjects{
+                print("fetched pin count \(fetchedObjects.count)")
                 self.pinCoreData = fetchedObjects.first
             }
         }catch{
@@ -56,31 +90,13 @@ class ViewControllerPhotos: UIViewController, UICollectionViewDelegate, UICollec
     fileprivate func setupFetchedResultsControllerPhotos(){//download pictures and store in core data
         let fetchRequestPhoto:NSFetchRequest<Photo> = Photo.fetchRequest()
         fetchRequestPhoto.predicate = NSPredicate(format: "pin == %@", pinCoreData)
-        fetchRequestPhoto.sortDescriptors = [NSSortDescriptor(key: "image", ascending: false)]
+        fetchRequestPhoto.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedResultsControllerPhotos = NSFetchedResultsController(fetchRequest: fetchRequestPhoto, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: "photos")
         fetchedResultsControllerPhotos.delegate = self
         do{
             try fetchedResultsControllerPhotos.performFetch()
             if let fetchedObjects = fetchedResultsControllerPhotos.fetchedObjects{
-                print("fetched obj count \(fetchedObjects.count)")
-                if fetchedObjects.count == 0{
-                    let requestBodyJson = RequestFlickr(api_key: FlickrClient.Auth.keyAPI, lat: latitude ?? 0.0, lon: longitude ?? 0.0)
-                    FlickrClient.taskForPOSTRequest(url: FlickrClient.Endpoints.searchPhotos(latitude: "\(latitude ?? 0.0)", longitude: "\(longitude ?? 0.0)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
-                        if let photos = responseObjectJSON?.photos.photo{
-                            for photo in photos{
-                                let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
-                                let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
-                                print(photoURL)
-                                if let data = try? Data(contentsOf: photoURL){
-                                    photoCoreData.image = data
-                                    photoCoreData.pin = self.pinCoreData
-                                }
-                            }
-                            try? self.dataController.persistentContainer.viewContext.save()
-                            self.collectionView.reloadData()
-                        }
-                    }
-                }
+                print("fetched photos count \(fetchedObjects.count)")
             }
         }catch{
             fatalError("The fetch could not be performed: \(error.localizedDescription)")

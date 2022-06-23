@@ -35,6 +35,7 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
         do{//fetch all core data pins and show on map
             try fetchedResultsController.performFetch()
             if let fetchedObjects = fetchedResultsController.fetchedObjects{
+                print("fetched pin count \(fetchedObjects.count)")
                 var annotations = [MKPointAnnotation]()
                 for pin in fetchedObjects{
                     let annotation = MKPointAnnotation()
@@ -67,12 +68,10 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
             annotation.subtitle = "You long pressed here"
             annotation.coordinate = touchMapCoordinate
             self.map.addAnnotation(annotation)
-            
             //put pin to core data
             let pinCoreData = Pin(context: dataController.persistentContainer.viewContext)
             pinCoreData.latitude = Double(touchMapCoordinate.latitude)
             pinCoreData.longitude = Double(touchMapCoordinate.longitude)
-            
             try? dataController.persistentContainer.viewContext.save()
         }
     }
