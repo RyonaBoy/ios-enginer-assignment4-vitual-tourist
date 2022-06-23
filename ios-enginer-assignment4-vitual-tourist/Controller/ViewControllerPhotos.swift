@@ -63,24 +63,24 @@ class ViewControllerPhotos: UIViewController, UICollectionViewDelegate, UICollec
             try fetchedResultsControllerPhotos.performFetch()
             if let fetchedObjects = fetchedResultsControllerPhotos.fetchedObjects{
                 print("fetched obj count \(fetchedObjects.count)")
-//                if fetchedObjects.count == 0{
-//                    let requestBodyJson = RequestFlickr(api_key: FlickrClient.Auth.keyAPI, lat: latitude ?? 0.0, lon: longitude ?? 0.0)
-//                    FlickrClient.taskForPOSTRequest(url: FlickrClient.Endpoints.searchPhotos(latitude: "\(latitude ?? 0.0)", longitude: "\(longitude ?? 0.0)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
-//                        if let photos = responseObjectJSON?.photos.photo{
-//                            for photo in photos{
-//                                let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
-//                                let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
-//                                print(photoURL)
-//                                if let data = try? Data(contentsOf: photoURL){
-//                                    photoCoreData.image = data
-//                                    photoCoreData.pin = self.pinCoreData
-//                                }
-//                            }
-//                            try? self.dataController.persistentContainer.viewContext.save()
-//                            self.collectionView.reloadData()
-//                        }
-//                    }
-//                }
+                if fetchedObjects.count == 0{
+                    let requestBodyJson = RequestFlickr(api_key: FlickrClient.Auth.keyAPI, lat: latitude ?? 0.0, lon: longitude ?? 0.0)
+                    FlickrClient.taskForPOSTRequest(url: FlickrClient.Endpoints.searchPhotos(latitude: "\(latitude ?? 0.0)", longitude: "\(longitude ?? 0.0)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
+                        if let photos = responseObjectJSON?.photos.photo{
+                            for photo in photos{
+                                let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
+                                let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
+                                print(photoURL)
+                                if let data = try? Data(contentsOf: photoURL){
+                                    photoCoreData.image = data
+                                    photoCoreData.pin = self.pinCoreData
+                                }
+                            }
+                            try? self.dataController.persistentContainer.viewContext.save()
+                            self.collectionView.reloadData()
+                        }
+                    }
+                }
             }
         }catch{
             fatalError("The fetch could not be performed: \(error.localizedDescription)")
