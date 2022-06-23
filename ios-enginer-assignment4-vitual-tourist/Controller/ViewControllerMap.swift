@@ -30,7 +30,7 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
     fileprivate func setupFetchedResultsControllerShit(){
         let fetchRequest:NSFetchRequest<Pin> = Pin.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: false)]
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: "pins")
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController.delegate = self
         do{//fetch all core data pins and show on map
             try fetchedResultsController.performFetch()

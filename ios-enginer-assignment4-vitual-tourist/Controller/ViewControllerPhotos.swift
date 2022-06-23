@@ -43,34 +43,30 @@ class ViewControllerPhotos: UIViewController, UICollectionViewDelegate, UICollec
             print("fetched photos count \(fetchedObjects.count)")
             for photo in fetchedObjects{
                 dataController.persistentContainer.viewContext.delete(photo)
-                do{
-                    try dataController.persistentContainer.viewContext.save()
-                }catch{
-                    print("Unable to delete picture")
-                }
             }
         }
         
         let requestBodyJson = RequestFlickr(api_key: FlickrClient.Auth.keyAPI, lat: latitude ?? 0.0, lon: longitude ?? 0.0)
         FlickrClient.taskForPOSTRequest(url: FlickrClient.Endpoints.searchPhotos(latitude: "\(latitude ?? 0.0)", longitude: "\(longitude ?? 0.0)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
             if let photos = responseObjectJSON?.photos.photo{
-//                for photo in photos{
-//                    let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
-//                    let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
-//                    print(photoURL)
-//                    if let data = try? Data(contentsOf: photoURL){
-//                        photoCoreData.image = data
-//                        photoCoreData.creationDate = Date()
+                for photo in photos{
+                    let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
+                    let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
+                    print(photoURL)
+                    if let data = try? Data(contentsOf: photoURL){
+                        photoCoreData.image = data
+                        photoCoreData.creationDate = Date()
 //                        photoCoreData.pin = self.pinCoreData
-//                    }
-//                }
-//                try? self.dataController.persistentContainer.viewContext.save()
-//                self.collectionView.reloadData()
+                    }
+                    try? self.dataController.persistentContainer.viewContext.save()
+                }
+                
+                self.collectionView.reloadData()
             }
         }
     }
     
-    fileprivate func setupFetchedResultsControllerPin(){//fetch core data pin for given latitude, longitude which needs to be associated with corresponding pictures after download
+    fileprivate func setupFetchedResultsControllerPin(){//fuck this shit
         let fetchRequestPin:NSFetchRequest<Pin> = Pin.fetchRequest()
         fetchRequestPin.predicate = NSPredicate(format: "latitude == %@ AND longitude == %@", NSNumber(value: latitude ?? 0.0), NSNumber(value: longitude ?? 0.0))
         fetchRequestPin.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: false)]
@@ -87,7 +83,7 @@ class ViewControllerPhotos: UIViewController, UICollectionViewDelegate, UICollec
         }
     }
     
-    fileprivate func setupFetchedResultsControllerPhotos(){//download pictures and store in core data
+    fileprivate func setupFetchedResultsControllerPhotos(){//fuck this shit
         let fetchRequestPhoto:NSFetchRequest<Photo> = Photo.fetchRequest()
         fetchRequestPhoto.predicate = NSPredicate(format: "pin == %@", pinCoreData)
         fetchRequestPhoto.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
