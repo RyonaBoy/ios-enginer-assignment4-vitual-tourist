@@ -8,7 +8,7 @@
 import Foundation
 
 class FlickrClient{
-    
+        
     struct Auth{
         static var keyAPI = "e18b1c5f268a1357f6a083cccf572d95"
         static var keyAPISecret = "21334bb536ce7fc3"//wtf is this needed for?
@@ -17,12 +17,12 @@ class FlickrClient{
     enum Endpoints{
         static let base = "https://www.flickr.com/services/rest/"
         
-        case searchPhotos(latitude: String, longitude: String, page: String)
+        case searchPhotos(latitude: String, longitude: String, perPage: String, page: String)
         
         var stringValue: String{
             switch self{
-            case let .searchPhotos(latitude, longitude, page):
-                return Endpoints.base + "?method=flickr.photos.search&api_key=" + Auth.keyAPI + "&lat=" + latitude + "&lon=" + longitude + "&per_page=20&page=" + page + "&format=json&nojsoncallback=1"
+            case let .searchPhotos(latitude, longitude, perPage, page):
+                return Endpoints.base + "?method=flickr.photos.search&api_key=" + Auth.keyAPI + "&lat=" + latitude + "&lon=" + longitude + "&per_page=" + perPage + "&page=" + page + "&format=json&nojsoncallback=1"
             }
         }
         
@@ -59,11 +59,12 @@ class FlickrClient{
         task.resume()
     }
     
-    class func downloadPictures(latitude: Double, longitude: Double, pages: Int, completion: @escaping (ResponseFlickr?, Error?) -> Void){
+    class func downloadPictureURLs(latitude: Double, longitude: Double, pages: Int, completion: @escaping (ResponseFlickr?, Error?) -> Void){
         let requestBodyJson = RequestFlickr(api_key: Auth.keyAPI, lat: latitude, lon: longitude)
-        let randomPage = Int.random(in: 1...pages)
+        let perPage = 20
+        let randomPage = Int.random(in: 1...min(pages, 4000/perPage))
         print("random page \(randomPage)")
-        taskForPOSTRequest(url: Endpoints.searchPhotos(latitude: "\(latitude)", longitude: "\(longitude)", page: "\(randomPage)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
+        taskForPOSTRequest(url: Endpoints.searchPhotos(latitude: "\(latitude)", longitude: "\(longitude)", perPage: "\(perPage)", page: "\(randomPage)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
             if let responseObjectJSON = responseObjectJSON {
                 completion(responseObjectJSON, nil)
             }else{
@@ -71,4 +72,18 @@ class FlickrClient{
             }
         }
     }
+    
+    func downloadImage(imagePath: String, completionHandler: @escaping (_ imageData: Data?, _ errorString: String?) -> Void){
+            let session = URLSession.shared
+            let imgURL = NSURL(string: imagePath)
+            let request: NSURLRequest = NSURLRequest(url: imgURL! as URL)
+            let task = session.dataTask(with: request as URLRequest) {data, response, downloadError in
+                if downloadError != nil {
+                    completionHandler(nil, "Could not download image \(imagePath)")
+                } else {
+                    completionHandler(data, nil)
+                }
+            }
+            task.resume()
+        }
 }

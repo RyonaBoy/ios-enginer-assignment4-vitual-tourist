@@ -17,7 +17,6 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        map.delegate = self
         setupFetchedResultsControllerShit()
         setupLongPressGestureShit()
     }

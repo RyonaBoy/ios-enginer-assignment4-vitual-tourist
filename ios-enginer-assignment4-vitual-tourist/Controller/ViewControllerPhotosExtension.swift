@@ -21,6 +21,10 @@ extension ViewControllerPhotos: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCell
         let photo = fetchedResultsControllerPhotos.object(at: indexPath)
+        let photoURL = photo.url!
+        if let data = try? Data(contentsOf: URL(string: photoURL)!){
+            photo.image = data//fill core data with image
+        }
         cell.imageView.image = UIImage(data: photo.image!)
         return cell
     }

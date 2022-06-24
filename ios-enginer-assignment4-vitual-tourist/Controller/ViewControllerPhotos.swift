@@ -50,7 +50,7 @@ class ViewControllerPhotos: UIViewController{
             }
         }
         //download new photos
-        FlickrClient.downloadPictures(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0, pages: pagesOverall ?? 1,completion: completionPhotosDownload(responseObjectJSON:error:))
+        FlickrClient.downloadPictureURLs(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0, pages: pagesOverall ?? 1,completion: completionPhotosURLDownload(responseObjectJSON:error:))
         //without this part the app crashes, no idea wy this is needed
         do{
             try fetchedResultsControllerPhotos.performFetch()
@@ -62,20 +62,32 @@ class ViewControllerPhotos: UIViewController{
         }
     }
     
-    func completionPhotosDownload(responseObjectJSON: ResponseFlickr?, error: Error?){
+    func completionPhotosURLDownload(responseObjectJSON: ResponseFlickr?, error: Error?){
         pagesOverall = responseObjectJSON?.photos.pages//set page count and random page range
+        
         if let photos = responseObjectJSON?.photos.photo{//fill core data with flickr pictures
             for photo in photos{
                 let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
-                let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
+                photoCoreData.url = "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg"
+                photoCoreData.creationDate = Date()//fill core data with creation date
+                photoCoreData.pin = self.pinCoreData//fill core data with relationship
+                print(photoCoreData.url)
+//                let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
 //                print(photoURL)
-                if let data = try? Data(contentsOf: photoURL){
-                    photoCoreData.image = data//fill core data with image
-                    photoCoreData.creationDate = Date()//fill core data with creation date
-                    photoCoreData.pin = self.pinCoreData//fill core data with relationship
-                }
+//                if let data = try? Data(contentsOf: photoURL){
+//                    photoCoreData.image = data//fill core data with image
+//                }
                 try? self.dataController.persistentContainer.viewContext.save()
             }
+        }
+        //without this part the app crashes, no idea wy this is needed
+        do{
+            try fetchedResultsControllerPhotos.performFetch()
+            if let fetchedObjects = fetchedResultsControllerPhotos.fetchedObjects{
+                print("new collection button fetched photos count \(fetchedObjects.count)")
+            }
+        }catch{
+            fatalError("The fetch could not be performed: \(error.localizedDescription)")
         }
         //enable button
         buttonNewCollection.isEnabled = true
@@ -110,7 +122,7 @@ class ViewControllerPhotos: UIViewController{
                 print("fetched photos count \(fetchedObjects.count)")
                 if fetchedObjects.count == 0{//if no photos from core data availble, download photos
                     buttonNewCollection.isEnabled = false//disable button
-                    FlickrClient.downloadPictures(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0, pages: pagesOverall ?? 1, completion: completionPhotosDownload(responseObjectJSON:error:))
+                    FlickrClient.downloadPictureURLs(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0, pages: pagesOverall ?? 1, completion: completionPhotosURLDownload(responseObjectJSON:error:))
                 }
             }
         }catch{
