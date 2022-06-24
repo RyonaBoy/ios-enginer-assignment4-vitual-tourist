@@ -20,12 +20,23 @@ extension ViewControllerPhotos: UICollectionViewDelegate, UICollectionViewDataSo
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCell
-        let photo = fetchedResultsControllerPhotos.object(at: indexPath)
-        let photoURL = photo.url!
-        if let data = try? Data(contentsOf: URL(string: photoURL)!){
-            photo.image = data//fill core data with image
+        let photoCoreData = fetchedResultsControllerPhotos.object(at: indexPath)
+        if let photo = photoCoreData.image{
+            cell.imageView.image = UIImage(data: photo)
+            cell.activityIndicator.stopAnimating()
+        }else{//if no image from core data, download the shit
+            cell.activityIndicator.startAnimating()
+            FlickrClient.downloadImage(imagePath: photoCoreData.url ?? "fuck"){data, error in
+                if let data = data{
+                    cell.imageView.image = UIImage(data: data)
+                    photoCoreData.image = data
+                    try? self.dataController.persistentContainer.viewContext.save()
+                    cell.activityIndicator.stopAnimating()
+                }else{
+                    print(error)
+                }
+            }
         }
-        cell.imageView.image = UIImage(data: photo.image!)
         return cell
     }
     

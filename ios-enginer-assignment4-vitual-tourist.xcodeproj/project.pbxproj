@@ -95,12 +95,12 @@
 		9A29C26F285F34E30006FBFD /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9AF1722F2860861A00A69427 /* FlickrClient.swift */,
-				9AF172332860A37000A69427 /* RequestFlickr.swift */,
-				9AF172312860A0FA00A69427 /* ResponseFlickr.swift */,
 				9A29C26B285F34B40006FBFD /* DataController.swift */,
 				9A29C271285F35310006FBFD /* assignment4.xcdatamodeld */,
 				9ABE7656286480D300EF91C4 /* PhotoCell.swift */,
+				9AF172332860A37000A69427 /* RequestFlickr.swift */,
+				9AF172312860A0FA00A69427 /* ResponseFlickr.swift */,
+				9AF1722F2860861A00A69427 /* FlickrClient.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

@@ -64,19 +64,12 @@ class ViewControllerPhotos: UIViewController{
     
     func completionPhotosURLDownload(responseObjectJSON: ResponseFlickr?, error: Error?){
         pagesOverall = responseObjectJSON?.photos.pages//set page count and random page range
-        
         if let photos = responseObjectJSON?.photos.photo{//fill core data with flickr pictures
             for photo in photos{
                 let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
                 photoCoreData.url = "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg"
                 photoCoreData.creationDate = Date()//fill core data with creation date
                 photoCoreData.pin = self.pinCoreData//fill core data with relationship
-                print(photoCoreData.url)
-//                let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
-//                print(photoURL)
-//                if let data = try? Data(contentsOf: photoURL){
-//                    photoCoreData.image = data//fill core data with image
-//                }
                 try? self.dataController.persistentContainer.viewContext.save()
             }
         }
