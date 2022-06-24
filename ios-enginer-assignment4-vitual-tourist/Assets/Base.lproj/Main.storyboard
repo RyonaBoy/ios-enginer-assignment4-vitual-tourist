@@ -32,7 +32,7 @@
                     </view>
                     <connections>
                         <outlet property="map" destination="xcs-B4-dbc" id="7T4-j7-BMf"/>
-                        <segue destination="OI9-Eg-QFk" kind="show" identifier="showPhotos" id="DNb-oK-Atx"/>
+                        <segue destination="OI9-Eg-QFk" kind="presentation" identifier="showPhotos" id="DNb-oK-Atx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -50,7 +50,7 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="jeV-cF-BlT">
                                 <rect key="frame" x="0.0" y="44" width="414" height="748"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wn3-EI-qsq">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wn3-EI-qsq">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -76,10 +76,14 @@
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <connections>
-                                            <outlet property="imageView" destination="z1F-Pg-X2n" id="pyJ-K7-Kdp"/>
+                                            <outlet property="imageView" destination="z1F-Pg-X2n" id="b8N-sL-ok1"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="OI9-Eg-QFk" id="aEs-Mo-cPh"/>
+                                    <outlet property="delegate" destination="OI9-Eg-QFk" id="uqa-7C-BxM"/>
+                                </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7M6-4F-T7q">
                                 <rect key="frame" x="0.0" y="792" width="414" height="50"/>
@@ -109,7 +113,7 @@
                     <connections>
                         <outlet property="buttonNewCollection" destination="7M6-4F-T7q" id="08c-pU-WuA"/>
                         <outlet property="collectionView" destination="jeV-cF-BlT" id="eFk-sG-L16"/>
-                        <outlet property="layout" destination="wn3-EI-qsq" id="vsM-4l-S4Y"/>
+                        <outlet property="layout" destination="wn3-EI-qsq" id="iBq-2p-dHD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CyB-up-9V0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -17,12 +17,12 @@ class FlickrClient{
     enum Endpoints{
         static let base = "https://www.flickr.com/services/rest/"
         
-        case searchPhotos(latitude: String, longitude: String)
+        case searchPhotos(latitude: String, longitude: String, page: String)
         
         var stringValue: String{
             switch self{
-            case let .searchPhotos(latitude, longitude):
-                return Endpoints.base + "?method=flickr.photos.search&api_key=" + Auth.keyAPI + "&lat=" + latitude + "&lon=" + longitude + "&per_page=20&page=1&format=json&nojsoncallback=1"
+            case let .searchPhotos(latitude, longitude, page):
+                return Endpoints.base + "?method=flickr.photos.search&api_key=" + Auth.keyAPI + "&lat=" + latitude + "&lon=" + longitude + "&per_page=20&page=" + page + "&format=json&nojsoncallback=1"
             }
         }
         
@@ -38,7 +38,7 @@ class FlickrClient{
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")//no idea what these bullshit does, copy pasted from previous project
         request.httpBody = try! JSONEncoder().encode(body)
         let task = URLSession.shared.dataTask(with: request){data, response, error in
-            print(url)
+//            print(url)
             print(String(data: data!, encoding: .utf8))
             guard let data = data else{
                 DispatchQueue.main.async {
@@ -60,4 +60,16 @@ class FlickrClient{
         task.resume()
     }
     
+    class func downloadPictures(latitude: Double, longitude: Double, pages: Int, completion: @escaping (ResponseFlickr?, Error?) -> Void){
+        let requestBodyJson = RequestFlickr(api_key: Auth.keyAPI, lat: latitude, lon: longitude)
+        let randomPage = Int.random(in: 1...pages)
+        print("random page \(randomPage)")
+        taskForPOSTRequest(url: Endpoints.searchPhotos(latitude: "\(latitude)", longitude: "\(longitude)", page: "\(randomPage)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
+            if let responseObjectJSON = responseObjectJSON {
+                completion(responseObjectJSON, nil)
+            }else{
+                completion(nil, error)
+            }
+        }
+    }
 }
