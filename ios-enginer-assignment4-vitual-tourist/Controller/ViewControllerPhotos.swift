@@ -51,24 +51,7 @@ class ViewControllerPhotos: UIViewController{
         }
         //download new photos
         FlickrClient.downloadPictures(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0, pages: pagesOverall ?? 1,completion: completionPhotosDownload(responseObjectJSON:error:))
-        
-//        let requestBodyJson = RequestFlickr(api_key: FlickrClient.Auth.keyAPI, lat: latitude ?? 0.0, lon: longitude ?? 0.0)
-//        FlickrClient.taskForPOSTRequest(url: FlickrClient.Endpoints.searchPhotos(latitude: "\(latitude ?? 0.0)", longitude: "\(longitude ?? 0.0)").url, responseType: ResponseFlickr.self, body: requestBodyJson){ responseObjectJSON, error in
-//            if let photos = responseObjectJSON?.photos.photo{
-//                for photo in photos{
-//                    let photoCoreData = Photo(context: self.dataController.persistentContainer.viewContext)
-//                    let photoURL = URL(string: "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret).jpg")!
-//                    print(photoURL)
-//                    if let data = try? Data(contentsOf: photoURL){
-//                        photoCoreData.image = data
-//                        photoCoreData.creationDate = Date()
-//                        photoCoreData.pin = self.pinCoreData
-//                    }
-//                    try? self.dataController.persistentContainer.viewContext.save()
-//                }
-//            }
-//        }
-        //without this part the fucking apple api crashes, no idea wy this is needed
+        //without this part the app crashes, no idea wy this is needed
         do{
             try fetchedResultsControllerPhotos.performFetch()
             if let fetchedObjects = fetchedResultsControllerPhotos.fetchedObjects{

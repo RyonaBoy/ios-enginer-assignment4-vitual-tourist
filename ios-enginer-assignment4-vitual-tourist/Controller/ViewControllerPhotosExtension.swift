@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-extension ViewControllerPhotos: UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
+extension ViewControllerPhotos: UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {//refactor delegate bs to avoid spaghetti code
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return fetchedResultsControllerPhotos.sections?.count ?? 1

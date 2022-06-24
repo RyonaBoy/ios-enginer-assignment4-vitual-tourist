@@ -10,7 +10,7 @@ import CoreData
 
 class DataController{
     let persistentContainer: NSPersistentContainer
-    let backgroundContext: NSManagedObjectContext!    //some concurrency bullshit, no idea how to use
+    let backgroundContext: NSManagedObjectContext!    //some concurrency bs, no idea how to use
 
     init(modelName: String){
         persistentContainer = NSPersistentContainer(name: modelName)
@@ -22,7 +22,7 @@ class DataController{
             guard error == nil else{
                 fatalError(error!.localizedDescription)
             }
-            //no idea what these bullshits do, copy pasted from mooskine
+            //no idea what these are, nothing explained by Udacity as usual, copy pasted from mooskine
             self.persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
             self.backgroundContext.automaticallyMergesChangesFromParent = true
             self.backgroundContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump

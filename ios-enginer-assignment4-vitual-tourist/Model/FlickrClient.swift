@@ -34,11 +34,10 @@ class FlickrClient{
     class func taskForPOSTRequest<ResponseType: Decodable, RequestType: Encodable>(url: URL, responseType: ResponseType.Type, body: RequestType, completion: @escaping (ResponseType?, Error?) -> Void){
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Accept")//no idea what these bullshit does, copy pasted from previous project
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")//no idea what these bullshit does, copy pasted from previous project
+        request.addValue("application/json", forHTTPHeaderField: "Accept")//no idea what this line is, nothing explained by Udacity as usual, copy pasted from previous project
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")//no idea what this line is, nothing explained by Udacity as usual, copy pasted from previous project
         request.httpBody = try! JSONEncoder().encode(body)
         let task = URLSession.shared.dataTask(with: request){data, response, error in
-//            print(url)
             print(String(data: data!, encoding: .utf8))
             guard let data = data else{
                 DispatchQueue.main.async {
